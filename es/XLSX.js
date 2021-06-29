@@ -1,4 +1,5 @@
 import { XLSX as xlsx } from "./xlsx.full.min.js";
+//import { XLSX as xlsx } from "./xlsx.mini.js";
 import { xlsx2csv } from "./xlsx2csv.js";
 
 const decode = (bin) => {

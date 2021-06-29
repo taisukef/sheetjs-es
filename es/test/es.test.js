@@ -1,7 +1,8 @@
 import { XLSX } from "../XLSX.js";
 import { CSV } from "https://js.sabae.cc/CSV.js";
 
-const fn = "test.xlsx";
+//const fn = "test.xlsx";
+const fn = "chikubetsujinkou.xls";
 
 const bin = new Uint8Array(await Deno.readFile(fn));
 const ws = XLSX.decode(bin);

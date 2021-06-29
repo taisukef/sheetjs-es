@@ -18,7 +18,8 @@ FLOWTARGET=$(LIB).flow.js
 FLOWAUX=$(patsubst %.js,%.flow.js,$(AUXTARGETS))
 AUXSCPTS=xlsxworker.js
 FLOWTGTS=$(TARGET) $(AUXTARGETS) $(AUXSCPTS) $(MINITGT)
-UGLIFYOPTS=--support-ie8 -m
+#UGLIFYOPTS=--support-ie8 -m
+UGLIFYOPTS=-m
 # CLOSURE=/usr/local/lib/node_modules/google-closure-compiler/compiler.jar
 
 ## Main Targets
@@ -63,13 +64,13 @@ dist: dist-deps $(TARGET) bower.json ## Prepare JS files for distribution
 	mkdir -p dist
 	<$(TARGET) sed "s/require('stream')/{}/g;s/require('....*')/undefined/g" > dist/$(TARGET)
 	cp LICENSE dist/
-	uglifyjs shim.js $(UGLIFYOPTS) -o dist/shim.min.js --preamble "$$(head -n 1 bits/00_header.js)"
-	uglifyjs $(DISTHDR) dist/$(TARGET) $(UGLIFYOPTS) -o dist/$(LIB).min.js --source-map dist/$(LIB).min.map --preamble "$$(head -n 1 bits/00_header.js)"
+	uglifyjs shim.js $(UGLIFYOPTS) -o dist/shim.min.js # -b beautify=false,preamble "$$(head -n 1 bits/00_header.js)"
+	uglifyjs $(DISTHDR) dist/$(TARGET) $(UGLIFYOPTS) -o dist/$(LIB).min.js # --source-map dist/$(LIB).min.map # -B --preamble "$$(head -n 1 bits/00_header.js)"
 	misc/strip_sourcemap.sh dist/$(LIB).min.js
-	uglifyjs $(DISTHDR) $(REQS) dist/$(TARGET) $(UGLIFYOPTS) -o dist/$(LIB).core.min.js --source-map dist/$(LIB).core.min.map --preamble "$$(head -n 1 bits/00_header.js)"
+	uglifyjs $(DISTHDR) $(REQS) dist/$(TARGET) $(UGLIFYOPTS) -o dist/$(LIB).core.min.js #--source-map dist/$(LIB).core.min.map # -B --preamble "$$(head -n 1 bits/00_header.js)"
 	misc/strip_sourcemap.sh dist/$(LIB).core.min.js
-	uglifyjs $(DISTHDR) $(REQS) $(ADDONS) dist/$(TARGET) $(AUXTARGETS) $(UGLIFYOPTS) -o dist/$(LIB).full.min.js --source-map dist/$(LIB).full.min.map --preamble "$$(head -n 1 bits/00_header.js)"
-	uglifyjs $(DISTHDR) $(MINITGT) $(UGLIFYOPTS) -o dist/$(LIB).mini.min.js --source-map dist/$(LIB).mini.min.map --preamble "$$(head -n 1 bits/00_header.js)"
+	uglifyjs $(DISTHDR) $(REQS) $(ADDONS) dist/$(TARGET) $(AUXTARGETS) $(UGLIFYOPTS) -o dist/$(LIB).full.min.js #--source-map dist/$(LIB).full.min.map # -b beautify=false,preamble "$$(head -n 1 bits/00_header.js)"
+	uglifyjs $(DISTHDR) $(MINITGT) $(UGLIFYOPTS) -o dist/$(LIB).mini.min.js # --source-map dist/$(LIB).mini.min.map -B -preamble "$$(head -n 1 bits/00_header.js)"
 	misc/strip_sourcemap.sh dist/$(LIB).full.min.js
 	misc/strip_sourcemap.sh dist/$(LIB).mini.min.js
 	cat <(head -n 1 bits/00_header.js) shim.js $(DISTHDR) $(REQS) dist/$(TARGET) > dist/$(LIB).extendscript.js

@@ -1730,7 +1730,10 @@ function read_directory(dir_start, sector_list, sectors, Paths, nmfs, files, Fil
 		if(o.size < 0 && o.start < 0) { o.size = o.type = 0; o.start = ENDOFCHAIN; o.name = ""; }
 		if(o.type === 5) { /* root */
 			minifat_store = o.start;
-			if(nmfs > 0 && minifat_store !== ENDOFCHAIN) sector_list[minifat_store].name = "!StreamData";
+			if (!sector_list[minifat_store]) {
+				//sector_list[minifat_store] = {}; // add by @taisukef
+				sector_list[minifat_store] = get_sector_list(sectors, o.start, sector_list.fat_addrs, sector_list.ssz); // copy by @taisuke
+			}
 			/*minifat_size = o.size;*/
 		} else if(o.size >= 4096 /* MSCSZ */) {
 			o.storage = 'fat';
