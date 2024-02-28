@@ -12,7 +12,7 @@ const toCSV = (wsorsheet, multisheets) => {
     if (multisheets) {
       const csv = [];
       for (const name of ws.SheetNames) {
-        const sh = ws.Sheets[ws.SheetNames[0]];
+        const sh = ws.Sheets[name];
         csv.push(xlsx2csv(sh));
       }
       return csv;
