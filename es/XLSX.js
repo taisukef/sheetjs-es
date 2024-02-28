@@ -6,14 +6,24 @@ const decode = (bin) => {
   const ws = xlsx.read(bin, { type: "array" });
   return ws;
 };
-const toCSV = (wsorsheet) => {
+const toCSV = (wsorsheet, multisheets) => {
   if (wsorsheet.Sheets) {
     const ws = wsorsheet;
-    const sh = ws.Sheets[ws.SheetNames[0]];
-    return xlsx2csv(sh);
+    if (multisheets) {
+      const csv = [];
+      for (const name of ws.SheetNames) {
+        const sh = ws.Sheets[ws.SheetNames[0]];
+        csv.push(xlsx2csv(sh));
+      }
+      return csv;
+    } else {
+      const sh = ws.Sheets[ws.SheetNames[0]];
+      return xlsx2csv(sh);
+    }
   } else {
     const sh = wsorsheet;
-    return xlsx2csv(sh);
+    const csv = xlsx2csv(sh);
+    return multisheets ? [csv] : csv;
   }
 };
 
